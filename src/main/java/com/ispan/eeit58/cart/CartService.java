@@ -22,13 +22,11 @@ public class CartService {
     @Autowired
     private CartItemRepository cartItemRepository;
 
-
     // 在這裡實現購物車相關的業務邏輯
     public List<CartItem> getCartItems(User user) {
         Cart cart = cartRepository.findByUser(user).orElse(null);
         return cart != null ? cart.getCartItems() : new ArrayList<>();
     }
-
 
     public void addToCart(User user, long productId, int quantity) {
         // 通过 productId 查找 Product
@@ -89,12 +87,9 @@ public class CartService {
         CartItem cartItem = cartItemRepository.findById(itemId).orElseThrow(() -> new NoSuchElementException("找不到購物車項目"));
         cartItemRepository.delete(cartItem);
     }
-    
-    
+
     public List<CartItem> getCartItemsByUserId(int userId) {
         Cart cart = cartRepository.findByUserId(userId);
         return cartItemRepository.findByCartId(cart.getId());
     }
-
-
 }
