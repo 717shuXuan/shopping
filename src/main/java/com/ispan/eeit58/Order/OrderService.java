@@ -63,7 +63,7 @@ public class OrderService {
         order.setOrderDate(new Date());
         order.setCreatedAt(LocalDateTime.now());
         order.setUpdatedAt(LocalDateTime.now());
-        order.setStatus("Pending");
+        order.setStatus("待出貨");
         order.setPaymentMethod("ECPay");
         order.setShippingMethod("ECPay");
         order.setShippingAddress("");
@@ -86,7 +86,7 @@ public class OrderService {
         payment.setPaymentMethod("ECPay");
         payment.setPaymentPrice(totalPrice);
         payment.setPaymentDate(new Date());
-        payment.setPaymentStatus("Pending");
+        payment.setPaymentStatus("待出貨");
         paymentRepository.save(payment);
 
         // 生成绿界金流的支付表单

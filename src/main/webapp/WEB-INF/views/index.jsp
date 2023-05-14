@@ -394,7 +394,7 @@
 	<!-- Footer-->
 	<footer class="py-5 bg-dark">
 		<div class="container">
-			<p class="m-0 text-center text-white">資產國際 &copy;
+			<p class="m-0 text-center text-white">資展國際 &copy;
 				跨域JAVA軟體工程師EEIT58</p>
 		</div>
 	</footer>
