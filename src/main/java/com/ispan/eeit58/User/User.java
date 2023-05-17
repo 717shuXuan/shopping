@@ -10,7 +10,17 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 @Table(name = "os_user")
 public class User {
-
+	
+	@Override
+	public String toString() {
+	    return "User{" +
+	            "id=" + id +
+	            ", account='" + account + '\'' +
+	            ", password='" + password + '\'' +
+	            ", role=" + role +
+	            // 你可以添加其他需要的字段
+	            '}';
+	}
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -50,13 +60,16 @@ public class User {
 
     @Column(name = "upgraded_time", nullable = false)
     private LocalDateTime upgradedTime = LocalDateTime.now();
-    
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private Role role;
+
     @PreUpdate
     public void onUpdate() {
         this.upgradedTime = LocalDateTime.now();
     }
 
-    
     // Getters and setters...
 
 	public int getId() {
@@ -153,6 +166,18 @@ public class User {
 
 	public void setUpgradedTime(LocalDateTime upgradedTime) {
 		this.upgradedTime = upgradedTime;
+	}
+	
+	public enum Role {
+	    USER,
+	    ADMIN
+	}
+	public Role getRole() {
+	    return this.role;
+	}
+	
+	public void setRole(Role role) {
+	    this.role = role;
 	}
     
 }

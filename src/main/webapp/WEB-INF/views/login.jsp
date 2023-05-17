@@ -78,29 +78,48 @@
 	</header>
 	<!-- Section-->
 	<c:if test="${not empty message}">
-		<div class="alert alert-warning" role="alert">${message}</div>
-	</c:if>
-
-	<section class="container py-5">
-		<div class="row">
-			<div class="col-md-6 offset-md-3">
-				<h2 class="text-center mb-4">登入</h2>
-				<form action="login" method="post">
-					<div class="form-group mb-3">
-						<label for="username">用戶名</label> <input type="text"
-							class="form-control" id="username" name="account" required>
-					</div>
-					<div class="form-group mb-3">
-						<label for="password">密碼</label> <input type="password"
-							class="form-control" id="password" name="password" required>
-					</div>
-					<button type="submit" class="btn btn-primary">登入</button>
-				</form>
-			</div>
-		</div>
-	</section>
-
-	<!-- Footer-->
+    <div class="alert alert-warning" role="alert">${message}</div>
+</c:if>
+<section class="container py-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <h2 class="text-center mb-4">登入</h2>
+            <form id="loginForm" action="login" method="post">
+                <div class="form-group mb-3">
+                    <label for="role">身份</label>
+                    <select class="form-control" id="role" name="role">
+                        <option value="user">一般用戶</option>
+                        <option value="admin">管理員</option>
+                    </select>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="username">帳號</label> <input type="text"
+                        class="form-control" id="username" name="account" required>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="password">密碼</label> <input type="password"
+                        class="form-control" id="password" name="password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">登入</button>
+            </form>
+        </div>
+    </div>
+</section>
+<script>
+    function updateFormAction() {
+        var form = document.getElementById('loginForm');
+        var role = document.getElementById('role');
+        if (role.value == 'admin') {
+            form.action = '/test/admin/login';
+        } else {
+            form.action = '/test/login';
+        }
+    }
+    document.getElementById('role').addEventListener('change', updateFormAction);
+    // 立即执行一次，以确保表单的action属性在页面加载时被正确设置
+    updateFormAction();
+</script>
+<!-- Footer-->
 	<footer class="py-5 bg-dark">
 		<div class="container">
 			<p class="m-0 text-center text-white">資展國際 &copy;

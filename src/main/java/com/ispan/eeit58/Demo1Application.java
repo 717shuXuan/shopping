@@ -11,6 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
 								"com.ispan.eeit58.Category",
 								"com.ispan.eeit58.cart",
 								"com.ispan.eeit58.ecpay",
+								"com.ispan.eeit58.admin",
 								"com.ispan.eeit58.payments"})
 
 public class Demo1Application {

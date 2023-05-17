@@ -23,6 +23,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 //import org.springframework.web.bind.annotation.SessionAttribute;
 
+import com.ispan.eeit58.User.User.Role;
+
 @Controller
 public class UserViewController {
     private boolean isAuthenticated(HttpServletRequest request) {
@@ -49,6 +51,47 @@ public class UserViewController {
         return "index";
     }
 
+    @GetMapping("/login")
+    public String userLoginPage() {
+        return "login";
+    }
+
+    @PostMapping("/login")
+    public String loginUser(@RequestParam("account") String account, @RequestParam("password") String password,
+            HttpServletRequest request, Model model, RedirectAttributes redirectAttributes) {
+        
+        // 查詢數據庫中是否存在對應的用戶
+        User user = userRepository.findByAccount(account);
+        if (user != null && user.getPassword().equals(password)) {
+            // 驗證通過，將用戶信息存儲在 session 中
+            HttpSession session = request.getSession();
+            session.setAttribute("user", user);
+            
+            // 根据用户角色重定向到不同页面
+            if (user.getRole() == Role.ADMIN) {
+                session.setAttribute("admin", user.getAccount());
+                return "redirect:/admin/index";
+            } else {
+                // 設定需要傳遞給下一個 request 的屬性值
+                redirectAttributes.addAttribute("welcomeMessage", "Welcome " + user.getRealname() + "!");
+                return "redirect:/index";
+            }
+        } else {
+            // 驗證失敗，返回錯誤信息
+            model.addAttribute("message", "Invalid username or password");
+            return "login";
+        }
+    }
+
+
+
+    
+    @GetMapping("/logout")
+    public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
+    	session.invalidate();
+    	redirectAttributes.addFlashAttribute("logoutMessage", "您已成功登出");
+    	return "redirect:/index";
+    }
 
 
     @GetMapping("/register")
@@ -90,43 +133,6 @@ public class UserViewController {
     }
 
 
-    @GetMapping("/login")
-    public String userLoginPage(@RequestParam(required = false) String error, Model model) {
-        if (error != null) {
-            // 登入失敗，返回錯誤信息
-            model.addAttribute("error", "Invalid username or password");
-        }
-        return "login";
-    }
-    
-    @PostMapping("/login")
-    public String loginUser(@RequestParam("account") String account, @RequestParam("password") String password,
-    		HttpServletRequest request, RedirectAttributes redirectAttributes) {
-    	
-    	// 查詢數據庫中是否存在對應的用戶
-    	User user = userRepository.findByAccount(account);
-    	if (user != null && user.getPassword().equals(password)) {
-    		// 驗證通過，將用戶信息存儲在 session 中
-    		HttpSession session = request.getSession();
-    		session.setAttribute("user", user);
-    		
-    		// 設定需要傳遞給下一個 request 的屬性值
-    		redirectAttributes.addAttribute("welcomeMessage", "Welcome " + user.getRealname() + "!");
-    		
-    		// 重定向到個人頁面
-    		return "redirect:/index";
-    	} else {
-    		// 驗證失敗，返回錯誤信息
-    		return "login";
-    	}
-    }
-
-    @GetMapping("/logout")
-    public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
-    	session.invalidate();
-    	redirectAttributes.addFlashAttribute("logoutMessage", "您已成功登出");
-    	return "redirect:/index";
-    }
 
     @GetMapping("/profile")
     public ModelAndView showProfile(HttpServletRequest request) {
